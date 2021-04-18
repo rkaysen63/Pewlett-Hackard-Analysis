@@ -1,3 +1,16 @@
+-- Drop existing table to recreate with another column
+DROP TABLE retirement_info;
+
+-- Create new table for retiring employees
+SELECT emp_no, first_name, last_name
+INTO retirement_info
+FROM employees
+WHERE (birth_date BETWEEN '1952-01-01' AND '1955-12-31')
+AND (hire_date BETWEEN '1985-01-01' AND '1988-12-31');
+-- Check the table
+SELECT * FROM retirement_info;
+
+
 -- Joining departments and dept_manager tables
 SELECT departments.dept_name,
     dept_manager.emp_no,
@@ -119,70 +132,23 @@ FROM current_emp as ce
 		ON (ce.emp_no = de.emp_no)
 	INNER JOIN departments AS d
 		ON (de.dept_no = d.dept_no);
-	
---Create sales_dept_info
-SELECT e.emp_no, 
-	e.first_name, 
-	e.last_name, 
-	d.dept_name
---INTO sales_dept_info
-FROM employees as e
-	INNER JOIN dept_emp as de
-		ON (e.emp_no = de.emp_no)
-	INNER JOIN departments as d
-		ON (de.dept_no = d.dept_no)
-WHERE (e.birth_date BETWEEN '1952-01-01' AND '1955-12-31')
-AND (e.hire_date BETWEEN '1985-01-01' AND '1988-12-31')
-AND (de.to_date = '9999-01-01')
-AND (de.dept_no = 'd007');
-
-
---Create sales_dept_info, can this be done with current_emp?
+---------------------------------------------------------
+--List of retiring employees in Sales 
 SELECT ce.emp_no, 
 	ce.first_name, 
 	ce.last_name, 
 	d.dept_name
---INTO sales_dept_info
-FROM current_emp as ce
-	INNER JOIN dept_emp as de
-		ON (ce.emp_no = de.emp_no)
-	INNER JOIN departments as d
-		ON (de.dept_no = d.dept_no)
-WHERE (e.birth_date BETWEEN '1952-01-01' AND '1955-12-31')
-AND (e.hire_date BETWEEN '1985-01-01' AND '1988-12-31')
-AND (de.dept_no = 'd007');
-
-
---Create sales_dept_info, can this be done with current_emp?
-SELECT ce.emp_no, 
-	ce.first_name, 
-	ce.last_name, 
-	d.dept_name
---INTO sales_dept_info
-FROM current_emp as ce
-	INNER JOIN dept_emp as de
-		ON (ce.emp_no = de.emp_no)
-	INNER JOIN departments as d
-		ON (de.dept_no = d.dept_no)
-WHERE (d.dept_name = 'sales');
-
---Create sales_dept_info, can this be done with current_emp?  
-SELECT ce.emp_no, 
-	ce.first_name, 
-	ce.last_name, 
-	d.dept_name
---INTO sales_dept_info
+--INTO sales_info
 FROM current_emp as ce
 	INNER JOIN dept_emp as de
 		ON (ce.emp_no = de.emp_no)
 	INNER JOIN departments as d
 		ON (de.dept_no = d.dept_no)
 WHERE (de.dept_no = 'd007')
-ORDER BY CE.last_name DESC;
---yikes, different results!
+ORDER BY ce.emp_no;
 
-
---Create sales_n_development
+------------------------------------------------------------
+-- List of retiring employees in Sales and Development
 SELECT ce.emp_no, 
 	ce.first_name, 
 	ce.last_name, 
@@ -193,4 +159,19 @@ FROM current_emp as ce
 		ON (ce.emp_no = de.emp_no)
 	INNER JOIN departments as d
 		ON (de.dept_no = d.dept_no)
-WHERE de.dept_no IN ('d007', 'd005');
+WHERE de.dept_no IN ('d007', 'd005')
+ORDER BY ce.emp_no;
+
+-- List of employees in Sales and Development
+SELECT ce.emp_no,
+	ce.first_name,
+	ce.last_name,
+	d.dept_name
+INTO sales_dev
+FROM current_emp as ce
+	INNER JOIN dept_emp AS de
+		ON (ce.emp_no = de.emp_no)
+	INNER JOIN departments AS d
+		ON (de.dept_no = d.dept_no)
+WHERE d.dept_name IN ('Sales', 'Development')
+ORDER BY ce.emp_no;
