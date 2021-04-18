@@ -70,7 +70,7 @@ ON ce.emp_no = de.emp_no
 GROUP BY de.dept_no
 ORDER BY de.dept_no;
 
--- Create a table for retiree count by department number
+-- Create a table for retiring empl count by department number
 SELECT COUNT(ce.emp_no), de.dept_no
 INTO retire_count_dept
 FROM current_emp as ce
