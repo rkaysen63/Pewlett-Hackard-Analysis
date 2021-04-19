@@ -80,22 +80,20 @@ The database was created from six Comma Separated Values files.  These files are
   <img src="Images/del_1_unique_titles.png" width="500"> 
 </p>  
 
-* Compare the size of the two tables *retirement_titles* and *unique_titles*.  
+* **Compare** the size of the two tables *retirement_titles* and *unique_titles*.  
 
-      -- count size of retirement_titles
       SELECT COUNT (emp_no)
       FROM retirement_titles;  
             
   * A count of `emp_no` on *retirement_titles* returns 133,776.  
   
-        -- count size of unique_titles  
         SELECT COUNT (emp_no)  
         FROM unique_titles;  
       
   * A count of `emp_no` on *unique_titles* returns 90,398.  *unique_titles* is approximately two-thirds the size of *retirement_titles* because each employee is only listed once.
 
 * **Retiring Titles Query**  
-  The Retiring Titles Query returns a table of seven job titles, i.e. roles, and number of employees who hold that title.  These numbers were queried from the database table *unique_titles* using the `COUNT()` function on `title` in conjunction with the `GROUP BY` clause on `title` to group the data by job title and return the number of times that title appears in *unique_titles*. The results were ordered by the “count” column in descending order.  However, the results do not show the breakdown of these roles by department.  
+  The Retiring Titles Query returns a table of seven job titles, i.e. roles, and number of employees who hold that title.  These numbers were queried from the database table *unique_titles* using the `COUNT()` function on `title` in conjunction with the `GROUP BY` clause on `title` to group the data by job title and return the number of times that title appears in *unique_titles*. The results were ordered by the “count” column in descending order.   
   
       SELECT   
         COUNT (title) as "count",  
@@ -110,7 +108,7 @@ The database was created from six Comma Separated Values files.  These files are
 </p>  
   
 * **Mentorship Eligibility Query**  
-  Employees born in the year 1965, i.e. employees that are 10 to 13 years younger than the retiring group, are eligible for the mentorship program that will prepare them to move into the roles currently occupied by the retiring group.  The query returns `emp_no`, `first_name`, `last_name`, and `birth_date` from the *employees* table, `from_date` and to_date` from the *dept_emp* table, and `title` from the *titles* table by a double `JOIN` and the results are written `INTO` a new table called *mentorship_eligibility*.  The double `JOIN` consists of an `INNER JOIN` of *employees* and *dept_emp* tables `ON` the key `emp_no` and a second ‘INNER JOIN` with *titles* again `ON` THE `emp_no` key.  The `INNER JOIN` will only include data that matches between the tables.  The results are filtered by `WHERE` and `AND` clauses, so that the returned result only includes employees who were born in 1965 **and** are currently working for P-H.  In order to return the emp_no once, the `SELECT DISTINCT ON` clause is used in conjunction with the `ORDER BY` clause.  `SELECT DISTINCT ON (e.emp_no)` pulls the emp_no one time from *employees* (“e” is alias for “employees”). `ORDER BY e.emp_no, t.to_date DESC` ensures that the results returned will be in order by the *employees* emp_no and arranges ‘t.to_date’ (“t” is alias for “ti) in descending order, i.e. most recent date first, so that `SELECT DISTINCT ON` keeps the row that has the most recent date.    
+  Employees born in the year 1965, i.e. employees that are 10 to 13 years younger than the retiring group, are eligible for the mentorship program that will prepare them to move into the roles currently occupied by the retiring group.  The query returns `emp_no`, `first_name`, `last_name`, and `birth_date` from the *employees* table, `from_date` and `to_date` from the *dept_emp* table, and `title` from the *titles* table by a double `JOIN` and the results are written `INTO` a new table called *mentorship_eligibility*.  The double `JOIN` consists of an `INNER JOIN` of *employees* and *dept_emp* tables `ON` the key `emp_no` and a second `INNER JOIN` with *titles* again `ON` THE `emp_no` key.  The `INNER JOIN` will only include data that matches between the tables.  The results are filtered by `WHERE` and `AND` clauses, so that the returned result only includes employees who were born in 1965 **and** are currently working for P-H.  In order to return the emp_no once, the `SELECT DISTINCT ON` clause is used in conjunction with the `ORDER BY` clause.  `SELECT DISTINCT ON (e.emp_no)` pulls the emp_no one time from *employees* (“e” is alias for “employees”). `ORDER BY e.emp_no, t.to_date DESC` ensures that the results returned will be in order by the *employees* unique id and arranges `t.to_date` (“t” is alias for “title") in descending order, i.e. most recent date first, so that `SELECT DISTINCT ON` keeps the row that has the most recent date.    
    
       SELECT DISTINCT ON (e.emp_no) e.emp_no,  
         e.first_name,  
