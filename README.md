@@ -30,7 +30,7 @@ Pewlett Hackard (P-H) has a large number of Baby Boomers on the verge of retirem
 ### Entity Relationship Diagram and Creating the Database
 Prior to setting up the database, an Entity Relationship Diagram (ERD) was created on www.quickdatabasediagrams.com.  The [ERD](https://github.com/rkaysen63/Pewlett-Hackard-Analysis/blob/master/README.md#Pewlett-Hackard-Analysis) is used to visualize the relationships between the data sources.  
 
-The database was created from six Comma Separated Values files.  These files are listed in the [Resources](https://github.com/rkaysen63/Pewlett-Hackard-Analysis/blob/master/README.md#resources).  Using the ERD as a guide, the six CSV files were imported and relationships established between tables to create the database.  The following is an example of the code required to import one of the CSV files.  The code includes the name of the table *dept_emp* and lists all of the columns and their data types.  In addition, the code identifies the primary key(s) and any foreign key(s) with their relationship(s) other tables. See [Schema](https://github.com/rkaysen63/Pewlett-Hackard-Analysis/blob/main/Queries/schema.sql). 
+The database was created from six Comma Separated Values files.  These files are listed in [Resources](https://github.com/rkaysen63/Pewlett-Hackard-Analysis/blob/master/README.md#resources) and can be downloaded from the ["Data" folder](https://github.com/rkaysen63/Pewlett-Hackard-Analysis/tree/main/Data).  Using the ERD as a guide, the six CSV files were imported and relationships established between tables to create the database.  The following is an example of the code required to import one of the CSV files.  The code includes the name of the table *dept_emp* and lists all of the columns and their data types.  In addition, the code identifies the primary key(s) and any foreign key(s) with their relationship(s) to other tables. For remaining code, please see [Schema](https://github.com/rkaysen63/Pewlett-Hackard-Analysis/blob/main/Queries/schema.sql). 
 
     CREATE TABLE dept_emp (
       emp_no INT NOT NULL,
@@ -44,23 +44,23 @@ The database was created from six Comma Separated Values files.  These files are
 ### Queries
 
 * **Retirement Titles Query**  
-  The Retirement Titles Query returns each employee’s unique id (`emp_no`), `first_name`, and `last_name` from the table, *employees*, and pulls employee titles (`title`) and date range of title (`from_date`, `to_date`) from the job titles table, *titles*, by an `INNER JOIN` that returns records that have matches between the *employees* and *title* tables.  The tables are joined `ON` the employee unique i.d. (`emp_no`) and the new columns are added `INTO` a new table called *retirement_titles*.  The data is filtered with a `WHERE (e.birth_date BETWEEN '1952-01-01' AND '1955-12-31')` to include only employees who were born in 1965. And finally, ordered by the emp_no in ascending order, which is the default order.  Aliases were used, e.g. `employees AS e`, to reduce misspellings, reduce keystrokes and to produce a cleaner looking code. 
+  The Retirement Titles Query returns each employee’s unique id (`emp_no`), `first_name`, and `last_name` from the table, *employees*, and pulls employee titles (`title`) and date range of title (`from_date`, `to_date`) from the job titles table, *titles*, by an `INNER JOIN` that returns records that have matches between the *employees* and *title* tables.  The tables are joined `ON` the employee unique i.d. (`emp_no`) and the new columns are added `INTO` a new table called *retirement_titles*.  The data is filtered by `WHERE (e.birth_date BETWEEN '1952-01-01' AND '1955-12-31')` to include only employees who were born in 1965. And finally, ordered by the emp_no in ascending order, which is the default order.  Aliases were used, `employees AS e` and `titles AS t`, to reduce misspellings, reduce keystrokes and to produce a cleaner looking code. 
 
-    SELECT e.emp_no, 
-     e.first_name,  
-     e.last_name,
-     t.title,
-     t.from_date,
-     t.to_date
-    INTO retirement_titles
-    FROM employees as e
-    INNER JOIN titles as t
-      ON (e.emp_no = t.emp_no)
-    WHERE (e.birth_date BETWEEN '1952-01-01' AND '1955-12-31')
-    ORDER BY e.emp_no;  
+      SELECT e.emp_no,  
+        e.first_name,  
+        e.last_name,  
+        t.title,  
+        t.from_date,  
+        t.to_date  
+      INTO retirement_titles  
+      FROM employees as e  
+      INNER JOIN titles as t  
+        ON (e.emp_no = t.emp_no)  
+      WHERE (e.birth_date BETWEEN '1952-01-01' AND '1955-12-31')  
+      ORDER BY e.emp_no;  
 
 <p align="center">
-  <img src="Images/del_1_retirement_titles.png" width="700"> 
+  <img src="Images/del_1_retirement_titles.png" width="600"> 
 </p>  
 
   Note, some employee names occur more than once indicating that they have held more than one title during their tenure with P-H.  
