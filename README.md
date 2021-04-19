@@ -157,51 +157,49 @@ While the results were informative, still more research was required to determin
        ON (de.dept_no=d.dept_no)  
        ORDER BY ut.emp_no, de.to_date;  
       
-   b. Then a second query to `GROUP BY` `dept_name AS “Department”` and `title AS “Title”` counts the total number of each title `COUNT(title) AS “Total”` by the “Department” grouping.   
+   b. Then a second query to create the final table, *rtrng_dept_title_count* was created using the `COUNT()` function on `title` `FROM` *unique_dept*.  The columns selected for the results include:  `dept_name AS "Department", title AS "Title, COUNT(title) AS "Total"`.  The aliases that were given to `dept_name`, `title` and `COUNT(title)`, as "Department", "Title" and "Total", respectively, can be used in the following code in lieu of the name, e.g. `ORDER BY "Department", "Title";`.  In addition, assigning the alias in the `SELECT` clause returned the aliases as the column headers.  The query returns a table with the title count grouped by department and title and both department and title ordered in the default ascending order.
   
-  When considering retiring roles by department, instead of 7 retiring roles, there are 26 different retiring roles of the 90,398 retiring employees.
+      When considering retiring roles by department, instead of 7 retiring roles, there are 26 different retiring roles of the 90,398 retiring employees.
        
-    SELECT dept_name As "Department", 
-      title AS "Title", COUNT(title) AS "Total"
-    INTO rtrng_dept_title_count
-    FROM unique_dept
-    GROUP BY dept_name, title
-    ORDER BY "Department", "Title";
+       SELECT dept_name As "Department", 
+         title AS "Title", COUNT(title) AS "Total"
+       INTO rtrng_dept_title_count
+       FROM unique_dept
+       GROUP BY dept_name, title
+       ORDER BY "Department", "Title";
 
   <p align="center">
     <img src="Images/del_3_rtrng_dept_title.png" width="400"> 
   </p>  
   
-   
-
 2) Are there enough qualified, retirement-ready employees in the departments to mentor the next generation of Pewlett-Hackard employees? 
    There are more than enough retirement-ready employees in the departments to mentor the next generation of P-H employees. The more important question for P-H is, who will fill the void when the “silver tsunami” retires?  P-H will be losing 90,398 employees to retirement, including 2 of their managers, but there are only 1549 employees that may be ready to move into those vacated roles.  See the side by side comparison below.
    
-  a. The table counting the number of titles by department of mentorship eligible employees, *mnt_dept_titl_count*, was arrived at in much the same way as the *rtrng_dept_title_count*.  A temporary table, *mntrship_elig_dept* was created from a double `INNER JOIN` using `SELECT DISTINCT ON` and `ORDER BY` to ensure that the results returned a single `emp_no` with the current title.  
+   a. The table counting the number of titles by department of mentorship eligible employees, *mnt_dept_titl_count*, was arrived at in much the same way as the *rtrng_dept_title_count*.  A temporary table, *mntrship_elig_dept* was created from a double `INNER JOIN` using `SELECT DISTINCT ON` and `ORDER BY` to ensure that the results returned a single `emp_no` with the current title.  
 
-    SELECT DISTINCT ON (me.emp_no) me.emp_no,
-      me.first_name,  
-      me.last_name,  
-      me.title,  
-      d.dept_name  
-    INTO mntrshp_elig_dept  
-    FROM mentorship_eligibility AS me  
-    INNER JOIN dept_emp AS de  
-      ON (me.emp_no=de.emp_no)  
-    INNER JOIN departments AS d  
-      ON (de.dept_no=d.dept_no)  
-    ORDER BY me.emp_no, de.to_date;```  
+       SELECT DISTINCT ON (me.emp_no) me.emp_no,
+         me.first_name,  
+         me.last_name,  
+         me.title,  
+         d.dept_name  
+       INTO mntrshp_elig_dept  
+       FROM mentorship_eligibility AS me  
+       INNER JOIN dept_emp AS de  
+         ON (me.emp_no=de.emp_no)  
+       INNER JOIN departments AS d  
+         ON (de.dept_no=d.dept_no)  
+       ORDER BY me.emp_no, de.to_date;```  
 
-   The final table, *mnt_dept_title_count* was created by a query that uses the `COUNT()` function on `title` `FROM` *mntrshp_elig_dept*.  The columns selected for the results include:  `dept_name AS "Department", title AS "Title, COUNT(title) AS "Total"`.  The aliases that were given to `dept_name`, `title` and `COUNT(title)`, as "Department", "Title" and "Total", respectively can be used in the following code in lieu of the name, e.g. `ORDER BY "Department", "Title";`.  In addition, assigning the alias in the `SELECT` clause returned the aliases as the column headers.  The query returns a table with the title count grouped by department and title and both department and title ordered in the default ascending order.
+    b. The final table, *mnt_dept_title_count* was created by a query that uses the `COUNT()` function on `title` `FROM` *mntrshp_elig_dept*.  The columns selected for the results include:  `dept_name AS "Department", title AS "Title, COUNT(title) AS "Total"`.  The aliases that were given to `dept_name`, `title` and `COUNT(title)`, as "Department", "Title" and "Total", respectively, can be used in the following code in lieu of the name, e.g. `ORDER BY "Department", "Title";`.  In addition, assigning the alias in the `SELECT` clause returned the aliases as the column headers.  The query returns a table with the title count grouped by department and title and both department and title ordered in the default ascending order.
 
-    SELECT dept_name As "Department", 
-      title AS "Title", COUNT(title) AS "Total"
-    INTO mnt_dept_title_count
-    FROM mntrshp_elig_dept
-    GROUP BY dept_name, title
-    ORDER BY "Department", "Title";
+       SELECT dept_name As "Department", 
+         title AS "Title", COUNT(title) AS "Total"
+       INTO mnt_dept_title_count
+       FROM mntrshp_elig_dept
+       GROUP BY dept_name, title
+       ORDER BY "Department", "Title";
   
-  The two tables *rtrng_dept_title_count* and * mnt_dept_title_count* were placed side by side for comparison.  Clearly there are enough Baby Boomers to mentor the next generation but not enough of the next generation to fill the roles they leave behind.  There’s approximately 1 employee in the mentorship program for every 50 that will be retiring.
+     The two tables *rtrng_dept_title_count* and *mnt_dept_title_count* were placed side by side for comparison.  Clearly there are enough Baby Boomers to mentor the next generation but not enough of the next generation to fill the roles they leave behind.  There’s approximately 1 employee in the mentorship program for every 50 that will be retiring.
   
   <p align="center">
     <img src="Images/dept_title_comparison.png" width="600"> 
