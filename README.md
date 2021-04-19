@@ -179,20 +179,20 @@ While the results were informative, still more research was required to determin
   
   The table counting the number of titles by department of mentorship eligible employees, *mnt_dept_titl_count*, was arrived at in much the same way as the *rtrng_dept_title_count*.  A temporary table, *mntrship_elig_dept* was created from a double `INNER JOIN` with unique emp_no with the current job title using `SELECT DISTINCT ON` and `ORDER BY` clauses.  
 
-      SELECT DISTINCT ON (me.emp_no) me.emp_no,  
-        me.first_name,  
-        me.last_name,  
-        me.title,  
-        d.dept_name  
-      INTO mntrshp_elig_dept  
-      FROM mentorship_eligibility AS me  
-      INNER JOIN dept_emp AS de  
-        ON (me.emp_no=de.emp_no)  
-      INNER JOIN departments AS d  
-        ON (de.dept_no=d.dept_no)  
-      ORDER BY me.emp_no, de.to_date;  
-  
-  The desired end result, *mnt_dept_title_count* was created from *mntrshp_elig_dept* using the `COUNT()` function, `GROUP BY` and `ORDER BY` clauses.  
+    SELECT DISTINCT ON (me.emp_no) me.emp_no,
+      me.first_name,  
+      me.last_name,  
+      me.title,  
+      d.dept_name  
+    INTO mntrshp_elig_dept  
+    FROM mentorship_eligibility AS me  
+    INNER JOIN dept_emp AS de  
+      ON (me.emp_no=de.emp_no)  
+    INNER JOIN departments AS d  
+      ON (de.dept_no=d.dept_no)  
+    ORDER BY me.emp_no, de.to_date;```  
+
+The desired end result, *mnt_dept_title_count* was created from *mntrshp_elig_dept* using the `COUNT()` function, `GROUP BY` and `ORDER BY` clauses.  
 
     SELECT dept_name As "Department", 
       title AS "Title", COUNT(title) AS "Total"
