@@ -141,23 +141,23 @@ The results yielded good information.  One query returns a table, *unique_titles
   
 While the results were informative, still more research was required to determine how many roles will need to be filled as the "silver tsunami" begins to make an impact and whether or not there are enough qualified, retirement-ready employees in the departments to mentor the next generation of Pewlett Hackard employees.  
   
-1)	How many roles will need to be filled as the “silver tsunami” begins to make an impact?  
-  a. While we did create of table of how many roles were retiring, *retiring_titles*, it did not provide a break-down by department.  A table of the number of retiring titles by department, *rtrng_dept_title_count* was created by first creating a temporary table *unique_dept* to add the departments to the *mentorship_eligibility* table.  *unique_dept* was created by a double `INNER JOIN` of *unique_titles* and *dept_emp* `ON` the key `emp_no` and `INNER JOIN` of *dept_emp* and *departments* `ON` the key `dept_no` in order to pull matching data for desired columns. The columns in the temporary table *unique_dept* include `emp_no`, `first_name`, `last_name` and `title` from *unique_title* (“ut” is alias for “unique_title”) and `dept_name` from *departments* (“d” is alias for “departments”).  Again, `SELECT DISTINCT ON` in conjunction with `ORDER BY` with `emp_no` and `to_date` in descending order ensured that  *unique_dept* had single entries for each employee id, `emp_no`, and the employees current `title` by ordering the most recent `to_date` first.    
+1) How many roles will need to be filled as the “silver tsunami” begins to make an impact?  
+   a. While we did create of table of how many roles were retiring, *retiring_titles*, it did not provide a break-down by department.  A table of the number of retiring titles by department, *rtrng_dept_title_count* was created by first creating a temporary table *unique_dept* to add the departments to the *mentorship_eligibility* table.  *unique_dept* was created by a double `INNER JOIN` of *unique_titles* and *dept_emp* `ON` the key `emp_no` and `INNER JOIN` of *dept_emp* and *departments* `ON` the key `dept_no` in order to pull matching data for desired columns. The columns in the temporary table *unique_dept* include `emp_no`, `first_name`, `last_name` and `title` from *unique_title* (“ut” is alias for “unique_title”) and `dept_name` from *departments* (“d” is alias for “departments”).  Again, `SELECT DISTINCT ON` in conjunction with `ORDER BY` with `emp_no` and `to_date` in descending order ensured that  *unique_dept* had single entries for each employee id, `emp_no`, and the employees current `title` by ordering the most recent `to_date` first.    
   
-      SELECT DISTINCT ON (ut.emp_no) ut.emp_no,  
-        ut.first_name,   
-        ut.last_name,  
-        ut.title,  
-        d.dept_name  
-      INTO unique_dept  
-      FROM unique_titles AS ut  
-      INNER JOIN dept_emp AS de  
-        ON (ut.emp_no=de.emp_no)  
-      INNER JOIN departments AS d  
-        ON (de.dept_no=d.dept_no)  
-      ORDER BY ut.emp_no, de.to_date;  
+       SELECT DISTINCT ON (ut.emp_no) ut.emp_no,  
+         ut.first_name,
+         ut.last_name,  
+         ut.title,  
+         d.dept_name  
+       INTO unique_dept  
+       FROM unique_titles AS ut  
+       INNER JOIN dept_emp AS de  
+       ON (ut.emp_no=de.emp_no)  
+       INNER JOIN departments AS d  
+       ON (de.dept_no=d.dept_no)  
+       ORDER BY ut.emp_no, de.to_date;  
       
-  b. Then a second query to `GROUP BY` `dept_name AS “Department”` and `title AS “Title”` counted the total number of each title `COUNT(title) AS “Total”` by the “Department” grouping.   
+   b. Then a second query to `GROUP BY` `dept_name AS “Department”` and `title AS “Title”` counts the total number of each title `COUNT(title) AS “Total”` by the “Department” grouping.   
   
   When considering retiring roles by department, instead of 7 retiring roles, there are 26 different retiring roles of the 90,398 retiring employees.
        
@@ -174,8 +174,8 @@ While the results were informative, still more research was required to determin
   
    
 
-2)	Are there enough qualified, retirement-ready employees in the departments to mentor the next generation of Pewlett-Hackard employees? 
-	There are more than enough retirement-ready employees in the departments to mentor the next generation of P-H employees. The more important question for P-H is, who will fill the void when the “silver tsunami” retires?  P-H will be losing 90,398 employees to retirement, including 2 of their managers, but there are only 1549 employees that may be ready to move into those vacated roles.  See the side by side comparison below.
+2) Are there enough qualified, retirement-ready employees in the departments to mentor the next generation of Pewlett-Hackard employees? 
+   There are more than enough retirement-ready employees in the departments to mentor the next generation of P-H employees. The more important question for P-H is, who will fill the void when the “silver tsunami” retires?  P-H will be losing 90,398 employees to retirement, including 2 of their managers, but there are only 1549 employees that may be ready to move into those vacated roles.  See the side by side comparison below.
    
   a. The table counting the number of titles by department of mentorship eligible employees, *mnt_dept_titl_count*, was arrived at in much the same way as the *rtrng_dept_title_count*.  A temporary table, *mntrship_elig_dept* was created from a double `INNER JOIN` using `SELECT DISTINCT ON` and `ORDER BY` to ensure that the results returned a single `emp_no` with the current title.  
 
@@ -192,7 +192,7 @@ While the results were informative, still more research was required to determin
       ON (de.dept_no=d.dept_no)  
     ORDER BY me.emp_no, de.to_date;```  
 
-The final table, *mnt_dept_title_count* was created by a query that uses the `COUNT()` function on `title` `FROM` *mntrshp_elig_dept*.  The columns selected for the results include:  `dept_name AS "Department", title AS "Title, COUNT(title) AS "Total"`.  The aliases that were given to `dept_name`, `title` and `COUNT(title)`, as "Department", "Title" and "Total", respectively can be used in the following code in lieu of the name, e.g. `ORDER BY "Department", "Title";`.  In addition, assigning the alias in the `SELECT` clause returned the aliases as the column headers.  The query returns a table with the title count grouped by department and title and both department and title ordered in the default ascending order.
+   The final table, *mnt_dept_title_count* was created by a query that uses the `COUNT()` function on `title` `FROM` *mntrshp_elig_dept*.  The columns selected for the results include:  `dept_name AS "Department", title AS "Title, COUNT(title) AS "Total"`.  The aliases that were given to `dept_name`, `title` and `COUNT(title)`, as "Department", "Title" and "Total", respectively can be used in the following code in lieu of the name, e.g. `ORDER BY "Department", "Title";`.  In addition, assigning the alias in the `SELECT` clause returned the aliases as the column headers.  The query returns a table with the title count grouped by department and title and both department and title ordered in the default ascending order.
 
     SELECT dept_name As "Department", 
       title AS "Title", COUNT(title) AS "Total"
