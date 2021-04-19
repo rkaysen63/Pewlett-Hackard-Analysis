@@ -68,13 +68,13 @@ The database was created from six Comma Separated Values files.  These files are
 *	**Unique Titles Query**  
   The Unique Titles Query returns `emp_no`,`first_name`, `last_name` and `title` `FROM` *retirement_titles* `INTO` a new table called *unique_titles*, but by using `SELECT DISTINCT ON` AND `ORDER BY` it removes any duplicate `emp_no` so that each employee appears only once with their current title. `SELECT DISTINCT ON` will keep the first row of `emp_no` and ignore the duplicates.  To ensure that the row that is kept is the desired row, `SELECT DISTINCT ON` is used in conjunction with the `ORDER BY` clause.  Since the most recent `to_date` is desired, the results requested were ordered by `emp_no` and `to_date` with `to_date` in descending `DESC` order so that the first row, i.e. the row that is kept, has the most recent `to_date`. 
 
-    SELECT DISTINCT ON (emp_no) emp_no, 
-      first_name, 
-      last_name,
-      title
-    INTO unique_titles
-    FROM retirement_titles
-    ORDER BY emp_no, to_date DESC;  
+      SELECT DISTINCT ON (emp_no) emp_no,
+        first_name,
+        last_name,
+        title
+      INTO unique_titles
+      FROM retirement_titles
+      ORDER BY emp_no, to_date DESC;  
 
   <p align="center">
     <img src="Images/del_1_unique_titles.png" width="500"> 
